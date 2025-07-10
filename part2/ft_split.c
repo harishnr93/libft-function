@@ -6,11 +6,13 @@
 /*   By: hnataraj <hnataraj@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 18:23:39 by hnataraj          #+#    #+#             */
-/*   Updated: 2025/07/09 18:24:01 by hnataraj         ###   ########.fr       */
+/*   Updated: 2025/07/10 17:24:21 by hnataraj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 char	**ft_split(char const *s, char c)
 {
+	char	**dst;
+
 
 }
