@@ -6,7 +6,7 @@
 /*   By: hnataraj <hnataraj@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 18:23:39 by hnataraj          #+#    #+#             */
-/*   Updated: 2025/07/11 13:37:57 by hnataraj         ###   ########.fr       */
+/*   Updated: 2025/07/11 12:47:32 by hnataraj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	ft_wordcnt(char const *s, char c)
 	return (cnt);
 }
 
-static char	*ft_duplicate(char const *s, char c)
+static int	ft_duplicate(char const *s, char c)
 {
 	char	word;
 	int		len;
@@ -59,28 +59,96 @@ static void	ft_memfree(char **dst, int cnt)
 
 char	**ft_split(char const *s, char c)
 {
-	char	**dst;
-	int		words;
+	
+}
+****
+static int	ft_wordlen(char const *s, char c)
+{
+	int	len;
+
+	len = 0;
+	while (s[len] && s[len] != c)
+		len++;
+	return (len);
+}
+
+static char	*ft_duplicate(char const *s, int len)
+{
+	char	*word;
 	int		i;
 
-	if (!s)
-		return (NULL);
-	words = ft_wordcnt(s, c);
-	dst = malloc((words + 1) * sizeof(char *));
-	if (!dst)
+	word = malloc((len + 1) * sizeof(char));
+	if (!word)
 		return (NULL);
 	i = 0;
-	while (i < words)
+	while (i < len)
+		word[i++] = s[i++];
+	word[i] = '\0';
+	return (word);
+}
+
+static void	ft_memfree(char **dst, int cnt)
+{
+	int	i;
+
+	i = 0;
+	while (i < cnt)
+		free(dst[i++]);
+	free(dst);
+}
+
+static char	**ft_updatedst(char const *s, char c, char **dst, int wordcnt)
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	while (*s && i < wordcnt)
 	{
-		while (*s == c)
+		while (*s && *s == c)
 			s++;
-		dst[i] = ft_duplicate(s, c);
-		if (!dst[i])
-			return (ft_memfree(dst, i), NULL);
-		while (*s && *s != c)
-			s++;
-		i++;
+		if (*s)
+		{
+			len = ft_wordlen (s, c);
+			dst[i] = ft_duplicate (s, len);
+			if (!dst[i])
+			{
+				ft_memfree(dst, i);
+				return (NULL);
+			}
+			s += len;
+			i++;
+		}
 	}
 	dst[i] = NULL;
 	return (dst);
 }
+
+char	**ft_split(char const *s, char c)
+{
+	char	**dst;
+	int		wordcnt;
+	int		inword;
+
+	inword = 0;
+	wordcnt = 0;
+	if (!s)
+		return (NULL);
+	while (*s)
+	{
+		if (*s != c && !inword)
+		{
+			inword = 1;
+			wordcnt++;
+		}
+		else if (*s == c)
+			wordcnt = 0;
+		s++;
+	}
+	dst = malloc((wordcnt + 1) * sizeof(char *));
+	if (!dst)
+		return (NULL);
+	ft_updatedst(s, c, dst, wordcnt);
+	return (dst);
+}
+
