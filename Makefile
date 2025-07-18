@@ -6,7 +6,7 @@
 #    By: hnataraj <hnataraj@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/11 14:03:41 by hnataraj          #+#    #+#              #
-#    Updated: 2025/07/11 14:04:02 by hnataraj         ###   ########.fr        #
+#    Updated: 2025/07/17 14:35:14 by hnataraj         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,14 +31,14 @@ SRCS		+= ft_substr.c ft_strjoin.c ft_strtrim.c ft_split.c ft_itoa.c \
 			   ft_strmapi.c ft_striteri.c ft_putchar_fd.c ft_putstr_fd.c \
 			   ft_putendl_fd.c ft_putnbr_fd.c
 
-# Bonus source files
-BONUS_SRCS	= ft_lstnew.c ft_lstadd_front.c ft_lstsize.c ft_lstlast.c \
-			  ft_lstadd_back.c ft_lstdelone.c ft_lstclear.c ft_lstiter.c \
-			  ft_lstmap.c
+# Source files - Part 3 (Bonus functions)
+BONUS_SRCS	=  ft_lstadd_back_bonus.c ft_lstadd_front_bonus.c ft_lstclear_bonus.c \
+			   ft_lstdelone_bonus.c ft_lstiter_bonus.c ft_lstlast_bonus.c \
+			   ft_lstmap_bonus.c ft_lstnew_bonus.c ft_lstsize_bonus.c
 
 # Object files
 OBJS		= $(SRCS:.c=.o)
-BONUS_OBJS	= $(BONUS_SRCS:.c=.o)
+BONUS_OBJ = $(BONUS_SRCS:.c=.o)
 
 # Header file
 HEADER		= libft.h
@@ -63,16 +63,21 @@ $(NAME): $(OBJS)
 	@echo "$(YELLOW)Compiling $<...$(NC)"
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-# Bonus rule
-bonus: $(BONUS_OBJS) $(OBJS)
-	@echo "$(YELLOW)Creating library with bonus $(NAME)...$(NC)"
-	@$(AR) $(NAME) $(OBJS) $(BONUS_OBJS)
-	@echo "$(GREEN)✓ $(NAME) with bonus created successfully!$(NC)"
+bonus: $(OBJS) $(BONUS_OBJ)
+	@echo "$(YELLOW)Creating library $(NAME)...$(NC)"
+	@$(AR) $(NAME) $(OBJS) $(BONUS_OBJ)
+	@echo "$(GREEN)✓ $(NAME) created successfully!$(NC)"
+
+# Compile source files
+%.o: %.c $(HEADER)
+	@echo "$(YELLOW)Compiling $<...$(NC)"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
 
 # Clean object files
 clean:
 	@echo "$(RED)Cleaning object files...$(NC)"
-	@$(RM) $(OBJS) $(BONUS_OBJS)
+	@$(RM) $(OBJS) $(BONUS_OBJ)
 	@echo "$(GREEN)✓ Object files cleaned!$(NC)"
 
 # Clean everything
@@ -93,13 +98,12 @@ test: $(NAME)
 # Run norminette (if available)
 norm:
 	@echo "$(YELLOW)Running norminette...$(NC)"
-	@norminette $(SRCS) $(BONUS_SRCS) $(HEADER) | grep -E "(Error|Warning)" || echo "$(GREEN)✓ Norminette passed!$(NC)"
+	@norminette $(SRCS) $(HEADER) | grep -E "(Error|Warning)" || echo "$(GREEN)✓ Norminette passed!$(NC)"
 
 # Help
 help:
 	@echo "$(YELLOW)Available targets:$(NC)"
 	@echo "  all     - Build the library"
-	@echo "  bonus   - Build the library with bonus functions"
 	@echo "  clean   - Remove object files"
 	@echo "  fclean  - Remove object files and library"
 	@echo "  re      - Rebuild everything"
@@ -108,4 +112,4 @@ help:
 	@echo "  help    - Show this help message"
 
 # Phony targets
-.PHONY: all bonus clean fclean re test norm help
+.PHONY: all clean fclean re test norm help
